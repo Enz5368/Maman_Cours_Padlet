@@ -70,3 +70,9 @@ test('Landscape Word export keeps the original 16:9 ratio', () => {
   assert.ok(Math.abs(Number(extent[1]) / Number(extent[2]) - 16 / 9) < 0.0001);
 });
 
+test('Generated PowerPoint uses a valid slide layout identifier', () => {
+  const ctx = vm.createContext({});
+  vm.runInContext(extract('pptxSlideMaster'), ctx);
+  assert.ok(ctx.pptxSlideMaster().includes('<p:sldLayoutId id="2147483649" r:id="rId1"/>'));
+});
+

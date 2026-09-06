@@ -4482,7 +4482,7 @@
         const result = findActivity(id);
         if (!result) return;
         document.querySelector("#editorModal").hidden = true;
-        const { activity, lesson, sequence, classe } = result;
+        const { activity } = result;
         ensureActivitySlides(activity);
         const slides = activity.slides || [];
         const index = Math.max(0, Math.min(Number(slideIndex || 0), slides.length - 1));
@@ -4786,34 +4786,23 @@
         modal.innerHTML = `<section class="print-preview-shell">
           <header class="print-preview-toolbar">
             <div>
-              <strong>Aperçu avant impression</strong>
-              <p class="small muted">Choisissez l’orientation. Chaque diapo sera imprimée sur une page distincte.</p>
+              <strong>Aperçu exact des pages Word</strong>
+              <p class="small muted">Chaque feuille ci-dessous correspond à une page du document exporté.</p>
             </div>
             <div class="row wrap">
-              ${printOrientationControl()}<button class="btn primary" onclick="printActivity()">Imprimer</button>
-              <button class="btn" onclick="exportActivityWord('${activity.id}')">Exporter Word (.docx)</button><button class="btn" onclick="exportPreviewPowerPoint('activityPrintPreview','activity','${activity.id}',this)">Exporter PowerPoint (.pptx)</button>
+              <button class="btn" onclick="setAllWordSlidesIncluded('activityPrintPreview')">Tout remettre</button>
+              <button class="btn primary" onclick="exportActivityWord('${activity.id}',this)">Exporter Word (.docx)</button>
+              <button class="btn" onclick="exportPreviewPowerPoint('activityPrintPreview','activity','${activity.id}',this)">Exporter PowerPoint (.pptx)</button>
               <button class="btn" onclick="closeEditor()">Fermer</button>
             </div>
           </header>
           <div class="print-preview-scroll">
-            <article class="printable-activity" id="activityPrintPreview">
-              <header class="print-activity-head">
-                <p class="print-breadcrumb">${escapeHtml(classe.title)} · ${escapeHtml(sequence.title)} · ${escapeHtml(lesson.title)}</p>
-                <h1>${escapeHtml(activity.title)}</h1>
-                ${activity.description ? `<p>${escapeHtml(activity.description)}</p>` : ""}
-                <dl class="print-activity-meta">
-                  ${printMeta("Objectif", activity.objective)}
-                  ${printMeta("Consigne", activity.instruction)}
-                  ${printMeta("Durée", activity.estimatedDuration)}
-                  ${printMeta("Modalité", activity.modality)}
-                  ${printMeta("Niveau", activity.level)}
-                </dl>
-              </header>
-              ${(activity.slides || []).map((slide, index) => renderPrintableSlide(activity, slide, index)).join("")}
-              ${(activity.resources || []).length ? `<section class="print-resources"><h2>Ressources</h2><ul>${activity.resources.map((resource) => `<li><strong>${escapeHtml(resource.title)}</strong>${resource.url ? ` — ${escapeHtml(resource.url)}` : ""}</li>`).join("")}</ul></section>` : ""}
+            <article class="printable-lesson word-multi-preview" id="activityPrintPreview">
+              ${(activity.slides || []).map((slide, index) => renderPrintableSlide(activity, slide, index, true)).join("")}
             </article>
           </div>
         </section>`;
+        arrangeWordPreviewPages("activityPrintPreview");
       }
 
       function printMeta(label, value) {
@@ -5039,7 +5028,7 @@
         const preview = document.getElementById(previewId);
         if (!preview) throw new Error("ouvrez d’abord l’aperçu");
         await document.fonts?.ready;
-        if (previewId === "lessonPrintPreview" || previewId === "sequencePrintPreview") {
+        if (["activityPrintPreview", "lessonPrintPreview", "sequencePrintPreview"].includes(previewId)) {
           return makeWordHandoutDocx([...preview.querySelectorAll('.print-slide-page:not([data-word-export="false"])')]);
         }
         const pages = [...preview.querySelectorAll('.print-slide-page:not([data-word-export="false"])')];
@@ -5550,7 +5539,7 @@
       }
 
       function pptxSlideMaster() {
-        return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sldMaster xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld name="Masque"><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr></p:spTree></p:cSld><p:clrMap accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" bg1="lt1" bg2="lt2" folHlink="folHlink" hlink="hlink" tx1="dk1" tx2="dk2"/><p:sldLayoutIdLst><p:sldLayoutId id="1" r:id="rId1"/></p:sldLayoutIdLst><p:txStyles><p:titleStyle><a:lvl1pPr><a:defRPr sz="3200"/></a:lvl1pPr></p:titleStyle><p:bodyStyle><a:lvl1pPr><a:defRPr sz="2400"/></a:lvl1pPr></p:bodyStyle><p:otherStyle><a:defPPr><a:defRPr lang="fr-FR"/></a:defPPr></p:otherStyle></p:txStyles></p:sldMaster>`;
+        return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sldMaster xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld name="Masque"><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr></p:spTree></p:cSld><p:clrMap accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" bg1="lt1" bg2="lt2" folHlink="folHlink" hlink="hlink" tx1="dk1" tx2="dk2"/><p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst><p:txStyles><p:titleStyle><a:lvl1pPr><a:defRPr sz="3200"/></a:lvl1pPr></p:titleStyle><p:bodyStyle><a:lvl1pPr><a:defRPr sz="2400"/></a:lvl1pPr></p:bodyStyle><p:otherStyle><a:defPPr><a:defRPr lang="fr-FR"/></a:defPPr></p:otherStyle></p:txStyles></p:sldMaster>`;
       }
 
       function pptxSlideMasterRels() {

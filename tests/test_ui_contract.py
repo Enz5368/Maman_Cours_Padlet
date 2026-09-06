@@ -503,6 +503,8 @@ def test_export_word_reproduit_apercu_sans_outils_interactifs() -> None:
     assert 'makePreviewPagesDocx("lessonPrintPreview")' in APP_JS
     assert 'makePreviewPagesDocx("sequencePrintPreview")' in APP_JS
     assert 'makePreviewPagesDocx("activityPrintPreview")' in APP_JS
+    assert 'arrangeWordPreviewPages("activityPrintPreview")' in APP_JS
+    assert '["activityPrintPreview", "lessonPrintPreview", "sequencePrintPreview"].includes(previewId)' in APP_JS
     assert "async function rasterizePreviewPage(" in APP_JS
     assert "async function paintPreviewElement(" in APP_JS
     assert "async function paintPreviewBytes(" in APP_JS
@@ -649,7 +651,7 @@ def test_serveur_accepte_les_formats_opendocument_du_selecteur() -> None:
         assert f'"{extension}": "{mime_type}"' in storage
         assert f'"{mime_type}"' in storage
     assert "extension in OPENDOCUMENT_MIME_BY_EXTENSION" in storage
-    assert "espace-prof-101" in INDEX
+    assert "espace-prof-102" in INDEX
     assert "Précédent" in APP_JS
     assert "Suivant" in APP_JS
     assert "setTimeout(startFreeExampleTutorial, 250);" in APP_JS
@@ -770,7 +772,7 @@ def test_plan_de_classe_style_cinema_et_emploi_du_temps_lycee() -> None:
     assert 'aria-label="Emploi du temps du lundi au vendredi"' in APP_JS
     assert ".timetable-course" in STYLES
     assert "assets/styles.css?v=espace-prof-56" in INDEX
-    assert "assets/app.js?v=espace-prof-101" in INDEX
+    assert "assets/app.js?v=espace-prof-102" in INDEX
     assert "assets/api-client.js?v=espace-prof-6" in INDEX
 
 
