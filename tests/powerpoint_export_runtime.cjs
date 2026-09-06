@@ -41,3 +41,32 @@ test('Export preserves selected slide order and releases its lock', async () => 
   assert.ok(clicked && unlocked);
 });
 
+test('Word preview groups half slides on portrait A4 pages and full slides on landscape pages', () => {
+  const element = tag => ({tag, children: [], dataset: {}, appendChild(child) { this.children.push(child); }, setAttribute() {}});
+  const slides = ['half', 'half', 'landscape', 'half'].map(layout => ({dataset: {wordLayout: layout, wordExport: 'true'}}));
+  const preview = element('article');
+  preview.querySelectorAll = () => slides;
+  preview.replaceChildren = () => { preview.children = []; };
+  const ctx = vm.createContext({document: {getElementById: () => preview, createElement: element}});
+  vm.runInContext(extract('arrangeWordPreviewPages'), ctx);
+  ctx.arrangeWordPreviewPages('lessonPrintPreview');
+  assert.deepEqual(Array.from(preview.children, page => page.className), [
+    'word-preview-sheet portrait',
+    'word-preview-sheet landscape',
+    'word-preview-sheet portrait',
+  ]);
+  assert.equal(preview.children[0].children.length, 3);
+  assert.equal(preview.children[1].children.length, 2);
+  assert.equal(preview.children[2].children.length, 2);
+  assert.deepEqual(slides.map(slide => slide.dataset.wordOrder), ['0', '1', '2', '3']);
+});
+
+test('Landscape Word export keeps the original 16:9 ratio', () => {
+  const ctx = vm.createContext({slideSize: {width: 960, height: 540}});
+  vm.runInContext(extract('docxMixedPageParagraph'), ctx);
+  const xml = ctx.docxMixedPageParagraph('rId1', 'landscape', 1, false);
+  const extent = /<wp:extent cx="(\d+)" cy="(\d+)"/.exec(xml);
+  assert.ok(extent);
+  assert.ok(Math.abs(Number(extent[1]) / Number(extent[2]) - 16 / 9) < 0.0001);
+});
+

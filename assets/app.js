@@ -4750,7 +4750,7 @@
         modal.hidden = false;
         modal.innerHTML = `<section class="print-preview-shell">
           <header class="print-preview-toolbar">
-            <div><strong>Aperçu avant export</strong><p class="small muted">Deux diapos par feuille A4 portrait par défaut. Chaque diapo peut passer en page entière paysage. PowerPoint : une diapo plein écran par diapositive.</p></div>
+            <div><strong>Aperçu exact des pages Word</strong><p class="small muted">Chaque feuille ci-dessous correspond à une page du document exporté.</p></div>
             <div class="row wrap"><button class="btn primary" onclick="exportLessonWord('${lesson.id}',this)">Exporter Word (.docx)</button><button class="btn" onclick="exportPreviewPowerPoint('lessonPrintPreview','lesson','${lesson.id}',this)">Exporter PowerPoint (.pptx)</button><button class="btn" onclick="closeEditor()">Fermer</button></div>
           </header>
           <div class="print-preview-scroll">
@@ -4761,6 +4761,7 @@
             </article>
           </div>
         </section>`;
+        arrangeWordPreviewPages("lessonPrintPreview");
       }
 
       function openSequenceWordPreview(sequenceId) {
@@ -4771,7 +4772,8 @@
         lessons.forEach((lesson) => (lesson.activities || []).forEach(ensureActivitySlides));
         const modal = document.querySelector("#editorModal");
         modal.hidden = false;
-        modal.innerHTML = `<section class="print-preview-shell"><header class="print-preview-toolbar"><div><strong>Aperçu de la séquence complète</strong><p class="small muted">Plusieurs diapos sont visibles. Retirez ou remettez chacune dans l’export. PowerPoint : une diapo plein écran par diapositive.</p></div><div class="row wrap"><button class="btn" onclick="setAllWordSlidesIncluded('sequencePrintPreview')">Tout remettre</button><button class="btn primary" onclick="exportSequenceWord('${sequence.id}',this)">Exporter Word (.docx)</button><button class="btn" onclick="exportPreviewPowerPoint('sequencePrintPreview','sequence','${sequence.id}',this)">Exporter PowerPoint (.pptx)</button><button class="btn" onclick="closeEditor()">Fermer</button></div></header><div class="print-preview-scroll"><article class="printable-lesson word-multi-preview" id="sequencePrintPreview">${lessons.map((lesson) => `<section class="print-lesson-activity">${(lesson.activities || []).map((activity) => `<section class="print-lesson-activity">${(activity.slides || []).map((slide,slideIndex) => renderPrintableSlide(activity,slide,slideIndex,true)).join("")}</section>`).join("")}</section>`).join("")}</article></div></section>`;
+        modal.innerHTML = `<section class="print-preview-shell"><header class="print-preview-toolbar"><div><strong>Aperçu exact des pages Word</strong><p class="small muted">Chaque feuille ci-dessous correspond à une page du document exporté.</p></div><div class="row wrap"><button class="btn" onclick="setAllWordSlidesIncluded('sequencePrintPreview')">Tout remettre</button><button class="btn primary" onclick="exportSequenceWord('${sequence.id}',this)">Exporter Word (.docx)</button><button class="btn" onclick="exportPreviewPowerPoint('sequencePrintPreview','sequence','${sequence.id}',this)">Exporter PowerPoint (.pptx)</button><button class="btn" onclick="closeEditor()">Fermer</button></div></header><div class="print-preview-scroll"><article class="printable-lesson word-multi-preview" id="sequencePrintPreview">${lessons.map((lesson) => `<section class="print-lesson-activity">${(lesson.activities || []).map((activity) => `<section class="print-lesson-activity">${(activity.slides || []).map((slide,slideIndex) => renderPrintableSlide(activity,slide,slideIndex,true)).join("")}</section>`).join("")}</section>`).join("")}</article></div></section>`;
+        arrangeWordPreviewPages("sequencePrintPreview");
       }
 
       function openActivityPrintPreview(activityId) {
@@ -4844,16 +4846,21 @@
         if (!slide) return;
         slide.wordLayout = value === "landscape" ? "landscape" : "half";
         const page = select.closest(".print-slide-page");
-        if (page) page.dataset.wordLayout = slide.wordLayout;
+        if (page) {
+          page.dataset.wordLayout = slide.wordLayout;
+          arrangeWordPreviewPages(page.closest(".word-multi-preview")?.id);
+        }
       }
 
       function toggleWordSlideIncluded(button) {
         const page = button.closest(".print-slide-page");
         if (!page) return;
+        const previewId = page.closest(".word-multi-preview")?.id;
         const include = page.dataset.wordExport === "false";
         page.dataset.wordExport = include ? "true" : "false";
         button.textContent = include ? "Retirer de l'export" : "Remettre dans l'export";
         button.setAttribute("aria-pressed", include ? "false" : "true");
+        arrangeWordPreviewPages(previewId);
       }
 
       function setAllWordSlidesIncluded(previewId) {
@@ -4862,6 +4869,61 @@
           const button = page.querySelector(".word-slide-export-toggle");
           if (button) button.textContent = "Retirer de l'export";
         });
+        arrangeWordPreviewPages(previewId);
+      }
+
+      function arrangeWordPreviewPages(previewId) {
+        const preview = document.getElementById(previewId);
+        if (!preview) return;
+        const slides = [...preview.querySelectorAll(".print-slide-page")];
+        if (!slides.length) return;
+        slides.forEach((slide, index) => {
+          if (slide.dataset.wordOrder === undefined) slide.dataset.wordOrder = String(index);
+        });
+        slides.sort((left, right) => Number(left.dataset.wordOrder) - Number(right.dataset.wordOrder));
+        preview.replaceChildren();
+        let pageNumber = 0;
+        let portraitSheet = null;
+        let portraitSlots = 0;
+        const createSheet = (orientation) => {
+          const sheet = document.createElement("section");
+          sheet.className = `word-preview-sheet ${orientation}`;
+          sheet.setAttribute("aria-label", `Page Word ${++pageNumber}, A4 ${orientation === "portrait" ? "portrait" : "paysage"}`);
+          const label = document.createElement("span");
+          label.className = "word-preview-page-label";
+          label.textContent = `Page ${pageNumber} · A4 ${orientation === "portrait" ? "portrait" : "paysage"}`;
+          sheet.appendChild(label);
+          preview.appendChild(sheet);
+          return sheet;
+        };
+        slides.filter((slide) => slide.dataset.wordExport !== "false").forEach((slide) => {
+          if (slide.dataset.wordLayout === "landscape") {
+            portraitSheet = null;
+            portraitSlots = 0;
+            const slot = document.createElement("div");
+            slot.className = "word-preview-slot";
+            slot.appendChild(slide);
+            createSheet("landscape").appendChild(slot);
+            return;
+          }
+          if (!portraitSheet || portraitSlots === 2) {
+            portraitSheet = createSheet("portrait");
+            portraitSlots = 0;
+          }
+          const slot = document.createElement("div");
+          slot.className = "word-preview-slot";
+          slot.appendChild(slide);
+          portraitSheet.appendChild(slot);
+          portraitSlots += 1;
+        });
+        const excluded = slides.filter((slide) => slide.dataset.wordExport === "false");
+        if (excluded.length) {
+          const tray = document.createElement("aside");
+          tray.className = "word-preview-excluded";
+          tray.innerHTML = "<strong>Diapos retirées de l’export</strong>";
+          excluded.forEach((slide) => tray.appendChild(slide));
+          preview.appendChild(tray);
+        }
       }
 
       function renderPrintableElement(element) {
