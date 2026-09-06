@@ -1129,6 +1129,7 @@
       .tutorial-guide-card ol { margin:0; padding:0 28px 22px 58px; color:var(--text); }
       .tutorial-guide-card li { padding:5px 0 5px 4px; line-height:1.5; }
       .tutorial-guide-note { margin:0 20px 22px; padding:12px 14px; border-radius:12px; background:#fff4d8; color:var(--wine-900); line-height:1.45; }
+      .tutorial-guide-warning { border:1px solid #d99b2b; background:#fff0c7; color:#5c3518; }
       .tutorial-guide-description { margin:0; padding:0 22px 14px; color:var(--muted); line-height:1.5; }
       .tutorial-launch { margin:0 22px 22px; }
       .studio-history-actions { display:inline-flex; gap:8px; }
@@ -1146,6 +1147,20 @@
         min-width: 0;
         width: 100%;
       }
+      .school-network-warning {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        width: 100%;
+        border: 1px solid #d99b2b;
+        border-radius: 9px;
+        background: #fff0c7;
+        color: #5c3518;
+        padding: 7px 10px;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .school-network-warning strong { flex: 0 0 auto; color: #7b1830; }
       .studio-general-actions { display:flex; flex-wrap:wrap; align-items:center; gap:4px; width:100%; overflow:visible; padding:2px 0; }
       .studio-general-actions > * { flex:0 0 auto; }
       .studio-general-actions > .btn, .studio-tool-actions > .btn { min-height:30px; padding:5px 9px; border-radius:8px; font-size:12px; line-height:1.1; }

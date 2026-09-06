@@ -2596,7 +2596,7 @@
         { view: "classes", selector: "[data-view='classes']", title: "Cours modifiables", text: "C’est ici que vous préparez la structure complète : classes, séquences, séances, contenus et ressources. Les modifications sont enregistrées dans votre espace." },
         { view: "classes", selector: "#content", title: "Créer et organiser", text: "Ouvrez chaque niveau successivement. Vous pouvez ajouter, renommer, réordonner ou supprimer les éléments, puis organiser les contenus d’une séance." },
         { view: "classes", selector: "#content", title: "Éditeur des contenus", text: "Dans un contenu, ajoutez des diapos, du texte, des URL, PDF, ODT, images, vidéos ou MP3. Les formats AVI, MOV, MKV, WMV, FLV, MPEG, M4V, 3GP et TS sont convertis automatiquement en MP4 compatible. Les objets et les diapos se déplacent par glisser-déposer ; Annuler permet de récupérer une suppression accidentelle." },
-        { view: "classes", selector: "#content", title: "Impression et export", text: "L’aperçu d’impression permet de choisir Portrait ou Paysage et place chaque diapo sur une page. Le ZIP conserve aussi les PDF, documents LibreOffice et médias." },
+        { view: "classes", selector: "#content", title: "Impression et export", text: "L’aperçu montre exactement les feuilles A4 du document Word : deux diapos par page portrait ou une diapo sur une page paysage. PowerPoint crée une diapo plein écran par contenu. Avant le cours, enregistrez aussi une copie PDF sur l’ordinateur : elle restera disponible si le réseau Isère bloque le site." },
         { view: "tree", selector: "[data-view='tree']", title: "Arbre", text: "L’arbre présente toute la hiérarchie du cours sur une seule page et fournit un accès direct à chaque classe, séquence, séance ou contenu." },
         { view: "studentClasses", selector: "[data-view='studentClasses']", title: "Groupes Classes", text: "Créez vos groupes et renseignez les élèves. Ces listes alimentent le plan de classe, la roue de la fortune et le suivi des absences." },
         { view: "studentClasses", selector: "#content", title: "Plan de classe", text: "Choisissez jusqu’à 40 bureaux, nommez-les, supprimez ceux qui sont inutiles et déplacez librement les sièges dans ou hors de la grille." },
@@ -2604,7 +2604,7 @@
         { view: "schedule", selector: "[data-view='schedule']", title: "Emploi du temps", text: "Cliquez dans le calendrier pour ajouter un cours. Seuls les horaires sont obligatoires ; le groupe, la description et le cours associé restent facultatifs." },
         { view: "schedule", selector: "#content", title: "Déplacer un cours", text: "Faites glisser un cours vers une autre case pour modifier son jour ou son heure. Cliquez dessus pour le modifier, le supprimer ou ouvrir son cours associé." },
         { view: "search", selector: "[data-view='search']", title: "Recherche", text: "Saisissez un mot du titre, de la consigne, du niveau ou d’une ressource pour retrouver rapidement un contenu dans tout votre espace." },
-        { view: "settings", selector: "[data-view='settings']", title: "Réglages et sauvegardes", text: "Vérifiez le stockage, exportez une sauvegarde ZIP complète et consultez les sauvegardes disponibles avant toute opération importante." },
+        { view: "settings", selector: "[data-view='settings']", title: "Réglages et sauvegardes", text: "Vérifiez le stockage et exportez une sauvegarde ZIP complète. Le ZIP sert à restaurer vos données ; pour présenter sans Internet, préparez aussi un PDF et ouvrez-le une fois avant le cours." },
         { view: "dashboard", selector: "#openBoardBtn", title: "Mode tableau", text: "Le mode tableau présente le contenu en plein écran. Utilisez les commandes pour passer d’une diapo à l’autre pendant le cours." },
         { view: "dashboard", selector: "#pronoteExternalLink", title: "Lien vers Pronote", text: "Le bouton « Cahier de texte » mène à un autre site : Pronote s’ouvre dans un nouvel onglet afin de ne pas fermer MON ESPACE PROF." },
         { view: "dashboard", selector: "#messagingExternalLink", title: "Lien vers la messagerie", text: "Le bouton « Messagerie » mène lui aussi à un autre site et s’ouvre dans un nouvel onglet." },
@@ -2643,15 +2643,16 @@
               <button class="btn primary tutorial-launch" onclick="startPracticalTutorial('schedule')">Lancer ce tutoriel</button>
             </details>
             <details class="tutorial-guide-card">
-              <summary><span class="tutorial-guide-icon">3</span><span><strong>Exporter en Word pour imprimer</strong><small>Préparer les diapos avant l’impression</small></span></summary>
+              <summary><span class="tutorial-guide-icon">3</span><span><strong>Exporter en Word, PowerPoint et PDF</strong><small>Préparer les diapos pour imprimer ou présenter</small></span></summary>
               <ol>
                 <li>Depuis une séquence ou une séance, cliquez sur <b>Arbre / Export Word</b>.</li>
                 <li>Vérifiez l’aperçu : les diapos sont placées par défaut deux par feuille A4 portrait.</li>
                 <li>Pour chaque diapo, choisissez si elle reste sur une demi-page ou prend une page entière en paysage.</li>
                 <li>Utilisez <b>Retirer de l’export</b> pour ne pas imprimer une diapo, et <b>Remettre dans l’export</b> pour la rétablir.</li>
-                <li>Cliquez sur <b>Exporter Word (.docx)</b>, ouvrez le fichier téléchargé dans Word, puis utilisez la commande <b>Imprimer</b> de Word.</li>
+                <li>Cliquez sur <b>Exporter Word (.docx)</b> pour imprimer, ou sur <b>Exporter PowerPoint (.pptx)</b> pour obtenir une diapo plein écran par contenu.</li>
+                <li>Dans Word, utilisez <b>Fichier → Enregistrer sous → PDF</b>. Enregistrez ce PDF sur l’ordinateur ou une clé USB et ouvrez-le une fois avant le cours.</li>
               </ol>
-              <p class="tutorial-guide-note"><b>À retenir :</b> l’export Word sert à obtenir un document prêt à être imprimé derrière.</p>
+              <p class="tutorial-guide-note tutorial-guide-warning"><b>Avant le cours :</b> le réseau Isère peut bloquer le site. Gardez toujours le PDF hors connexion pour pouvoir présenter même sans accès au site.</p>
               <button class="btn primary tutorial-launch" onclick="startPracticalTutorial('word')">Lancer ce tutoriel</button>
             </details>
             <details class="tutorial-guide-card">
@@ -2663,12 +2664,24 @@
                 <li>Le ZIP range les cours par dossiers de classes et contient les exports Word des séquences ainsi que les données nécessaires à une restauration.</li>
                 <li>Pour récupérer cette sauvegarde plus tard, revenez dans <b>Réglages</b> et utilisez <b>Importer ZIP ou JSON</b>.</li>
               </ol>
+              <p class="tutorial-guide-note"><b>Attention :</b> le ZIP est une sauvegarde à restaurer. Pour le cours, conservez aussi un PDF directement ouvrable.</p>
               <button class="btn primary tutorial-launch" onclick="startPracticalTutorial('zip')">Lancer ce tutoriel</button>
             </details>
             <details class="tutorial-guide-card tutorial-editor-guide">
               <summary><span class="tutorial-guide-icon">5</span><span><strong>Comprendre tous les boutons de l’éditeur</strong><small>Diapos, objets, texte, outils et enregistrement</small></span></summary>
-              <p class="tutorial-guide-description">Cette visite ouvre votre premier contenu sans le modifier et explique toutes les commandes de l’éditeur, y compris la mise en forme du texte.</p>
+              <p class="tutorial-guide-description">Cette visite ouvre votre premier contenu sans le modifier et explique toutes les commandes de l’éditeur. Vous pouvez aussi rester environ une seconde sur n’importe quel bouton pour afficher son rôle et son fonctionnement.</p>
               <button class="btn primary tutorial-launch" onclick="startPracticalTutorial('editor')">Lancer le tutoriel de l’éditeur</button>
+            </details>
+            <details class="tutorial-guide-card tutorial-offline-guide">
+              <summary><span class="tutorial-guide-icon">6</span><span><strong>Préparer le cours hors connexion</strong><small>Garder un PDF si le réseau Isère bloque le site</small></span></summary>
+              <ol>
+                <li>Ouvrez le contenu dans l’éditeur puis cliquez sur <b>Imprimer / Word</b>.</li>
+                <li>Contrôlez chaque feuille dans l’aperçu A4 exact et exportez le document Word.</li>
+                <li>Dans Word, choisissez <b>Fichier → Enregistrer sous → PDF</b>.</li>
+                <li>Enregistrez le PDF sur l’ordinateur ou une clé USB, puis ouvrez-le avant de partir en cours.</li>
+              </ol>
+              <p class="tutorial-guide-note tutorial-guide-warning"><b>Conseil :</b> gardez le PDF ouvert ou facilement accessible. Il ne dépend pas du réseau de l’établissement.</p>
+              <button class="btn primary tutorial-launch" onclick="startPracticalTutorial('offline')">Voir où préparer le PDF</button>
             </details>
           </section>
           <section class="card">
@@ -2706,22 +2719,27 @@
           word: [
             { view:"classes", selector:"button[onclick*='openEditableSubtree']", title:"Arbre / Export Word", text:"Depuis une classe ou une séquence, ouvrez l’aperçu avec ce bouton.", enter:()=>items.classe&&openClassPage(items.classe.id) },
             { view:"classes", selector:".print-preview-shell", title:"Préparer les pages à imprimer", text:"Dans l’aperçu, choisissez la mise en page de chaque diapo et retirez celles que vous ne voulez pas imprimer.", enter:()=>items.sequence&&openSequenceWordPreview(items.sequence.id) },
-            { view:"classes", selector:"button[onclick*='exportSequenceWord']", title:"Exporter Word", text:"Téléchargez le document Word, ouvrez-le puis utilisez la commande Imprimer de Word." }
+            { view:"classes", selector:"button[onclick*='exportSequenceWord']", title:"Exporter Word et créer le PDF", text:"Téléchargez le document Word. Dans Word, utilisez Fichier → Enregistrer sous → PDF, puis gardez cette copie sur l’ordinateur pour le cours." }
           ],
           zip: [
             { view:"settings", selector:"[data-view='settings']", title:"Réglages", text:"La sauvegarde complète se trouve dans les Réglages." },
             { view:"settings", selector:"button[onclick='exportZip(this)']", title:"Exporter ZIP", text:"Ce bouton télécharge une sauvegarde complète, classée par dossiers de classes." },
             { view:"settings", selector:"#importDataBtn", title:"Importer ZIP ou JSON", text:"Utilisez ce bouton pour restaurer ultérieurement une sauvegarde exportée." }
           ],
-          editor: editorTutorialSteps(items.activity)
+          editor: editorTutorialSteps(items.activity),
+          offline: [
+            { view:"classes", selector:"[data-tour='studio-offline-warning']", title:"Prévoir le blocage du réseau Isère", text:"Avant chaque cours, préparez une copie PDF locale. Elle s’ouvrira même si l’établissement bloque l’accès au site." },
+            { view:"classes", selector:"[data-tour='studio-word']", title:"Ouvrir l’aperçu A4", text:"Cliquez ici, contrôlez les pages, exportez en Word puis utilisez Fichier → Enregistrer sous → PDF dans Word." }
+          ]
         };
         const steps = definitions[kind] || [];
-        if (!steps.length || (kind === "editor" && !items.activity)) { toast("Créez d’abord au moins un contenu pour lancer ce tutoriel."); return; }
+        const needsActivity = kind === "editor" || kind === "offline";
+        if (!steps.length || (needsActivity && !items.activity)) { toast("Créez d’abord au moins un contenu pour lancer ce tutoriel."); return; }
         currentView = steps[0].view;
         if (currentView === "classes") currentPage = { type:"classes" };
         document.querySelectorAll(".nav-button[data-view]").forEach(button=>button.classList.toggle("active",button.dataset.view===currentView));
         render();
-        if (kind === "editor") openActivityStudio(items.activity.id);
+        if (needsActivity) openActivityStudio(items.activity.id);
         activeTutorialSteps = steps;
         tourIndex = 0;
         tourRunning = true;
@@ -2748,7 +2766,8 @@
           step("[data-tour='studio-delete-object']","Supprimer un objet","Supprime uniquement l’objet actuellement sélectionné."),
           step("[data-tour='studio-save']","Enregistrer","Enregistre toutes les modifications du contenu sur le serveur."),
           step("[data-tour='studio-present']","Présenter","Ouvre la diapo en mode tableau pour la projeter aux élèves."),
-          step("[data-tour='studio-word']","Imprimer / Word","Ouvre l’aperçu permettant de préparer le document Word destiné à l’impression."),
+          step("[data-tour='studio-word']","Imprimer, Word, PowerPoint et PDF","Ouvre l’aperçu A4 exact. Exportez en Word pour imprimer ou créer un PDF, ou en PowerPoint pour obtenir une diapo plein écran par contenu."),
+          step("[data-tour='studio-offline-warning']","Copie PDF hors connexion","Avant le cours, enregistrez un PDF sur l’ordinateur ou une clé USB. Il restera disponible si le réseau Isère bloque le site."),
           step("[data-tour='studio-close']","Fermer","Quitte l’éditeur et revient à la séance."),
           step("#studioTextFormatToolbar","Mise en forme du texte","Après avoir sélectionné du texte : police, taille, agrandissement, gras, italique, souligné, barré, indice, exposant, listes, retraits, alignements, suppression du style, surlignage et couleur deviennent disponibles.",()=>{const bar=document.querySelector('#studioTextFormatToolbar'),actions=document.querySelector('#studioGeneralActions');if(bar)bar.hidden=false;if(actions)actions.hidden=true;})
         ];
@@ -2775,11 +2794,11 @@
           { view: "tools", selector: "#content", title: "Outils", text: "Testez la roue, les absences, les compteurs et le chronomètre exactement comme dans le véritable espace." },
           { view: "schedule", selector: "#content", title: "Emploi du temps", text: "Cliquez sur une case : seules les heures sont obligatoires. Le cours, la description et le groupe choisi dans la liste déroulante restent facultatifs." },
           { view: "search", selector: "#content", title: "Recherche", text: "Retrouvez rapidement un contenu ou une ressource dans toutes les données de démonstration." },
-          { view: "tutorial", selector: "#content", title: "Tutoriel", text: "Relancez cette visite complète à tout moment ou passez-la avec le bouton prévu." },
+          { view: "tutorial", selector: "#content", title: "Tutoriels et aide sur les boutons", text: "Relancez une visite à tout moment. Dans tout le site, laissez la souris environ une seconde sur un bouton, ou sélectionnez-le au clavier, pour lire son rôle et son fonctionnement." },
           { view: "dashboard", selector: "[data-shortcut-title='Cahier de texte']", title: "Cahier de texte externe", text: "Ce raccourci mène à Pronote, un autre site, qui s’ouvre dans un nouvel onglet." },
           { view: "dashboard", selector: "[data-shortcut-title='Messagerie']", title: "Messagerie externe", text: "Ce raccourci mène à la messagerie académique, sur un autre site ouvert dans un nouvel onglet." },
           { view: "tutorial", selector: "#exampleAd", title: "OrellanaTech et contact", text: "Le nom « OrellanaTech » mène au site externe d’OrellanaTech dans un nouvel onglet. Le téléphone et l’adresse e-mail se copient au clic." },
-          { view: "settings", selector: "#content", title: "Réglages", text: "Exportez un ZIP complet : les PDF, documents LibreOffice, MP3 et autres médias sont inclus pour rester consultables hors ligne." },
+          { view: "settings", selector: "#content", title: "Réglages et secours hors connexion", text: "Le ZIP sauvegarde toutes les données pour les restaurer. Avant un cours, exportez aussi la présentation en PDF et ouvrez-la une fois sur l’ordinateur : elle restera utilisable si le réseau Isère bloque le site." },
           { view: "dashboard", selector: "#content", title: "Classe 5eme", text: "On commence par la classe 5eme.", enter: () => firstClass && openTableauClass(firstClass.id) },
           { view: "dashboard", selector: "#content", title: "Séquence", text: "Le tutoriel ouvre la première séquence de l'exemple.", enter: () => firstClass && firstSequence && openTableauSequence(firstClass.id, firstSequence.id) },
           { view: "dashboard", selector: "#content", title: "Séance", text: "Puis la visite ouvre la première séance pour trouver ses contenus.", enter: () => firstClass && firstSequence && firstLesson && openTableauLesson(firstClass.id, firstSequence.id, firstLesson.id) },
@@ -3159,6 +3178,10 @@
                 <button class="btn" data-tour="studio-word" onclick="previewStudioActivity('${activity.id}',this)">Imprimer / Word</button>
                 <button class="btn primary" data-tour="studio-close" onclick="closeEditor()">Fermer</button>
                 </div>
+              </div>
+              <div class="school-network-warning" data-tour="studio-offline-warning" role="note">
+                <strong>Avant le cours :</strong>
+                <span>le réseau Isère peut bloquer le site. Ouvrez <b>Imprimer / Word</b>, exportez en Word puis enregistrez un <b>PDF sur l’ordinateur ou une clé USB</b>.</span>
               </div>
             </header>
             <div class="studio-workspace">
@@ -5977,15 +6000,39 @@
 
       function buttonHelpText(button) {
         if (button.dataset.help) return button.dataset.help;
+        const tourKey = button.closest("[data-tour]")?.dataset.tour;
+        const studioHelp = {
+          "studio-title": "Renomme le contenu complet. Saisissez le nouveau titre puis validez.",
+          "studio-instruction": "Modifie la consigne affichée au-dessus de la diapo sélectionnée.",
+          "studio-instruction-toggle": "Affiche ou masque la consigne uniquement sur la diapo sélectionnée.",
+          "studio-add-slide": "Ajoute une nouvelle diapo vide après la diapo actuelle.",
+          "studio-history": "Annuler revient sur la dernière modification. Rétablir remet la modification annulée.",
+          "studio-delete-slide": "Supprime la diapo sélectionnée. Une présentation conserve toujours au moins une diapo.",
+          "studio-add-text": "Ajoute une zone de texte sur la diapo. Cliquez ensuite dans le texte pour l’écrire et le mettre en forme.",
+          "studio-add-url": "Ajoute une vidéo YouTube, un lien ou une ressource en ligne à partir de son adresse Internet.",
+          "studio-add-file": "Importe une image, un son, une vidéo, un PDF, un document Word, Excel ou PowerPoint depuis l’ordinateur.",
+          "studio-tools": "Choisissez un groupe pour la roue, puis insérez une roue ou un chronomètre déplaçable dans la diapo.",
+          "studio-delete-object": "Supprime l’objet sélectionné dans la diapo sans supprimer la diapo entière.",
+          "studio-save": "Enregistre sur le serveur toutes les modifications faites dans cet éditeur.",
+          "studio-present": "Ouvre la présentation en mode tableau. Avant le cours, préparez aussi un PDF si le réseau de l’établissement bloque le site.",
+          "studio-word": "Ouvre l’aperçu A4 exact. Vous pourrez exporter en Word, en PowerPoint, puis enregistrer une copie PDF hors connexion.",
+          "studio-close": "Ferme l’éditeur. Si des changements ne sont pas enregistrés, une confirmation vous sera demandée."
+        };
+        if (tourKey && studioHelp[tourKey]) return studioHelp[tourKey];
         const label = (button.getAttribute("aria-label") || button.title || button.textContent || "").replace(/\s+/g, " ").trim();
         const normalized = label.toLowerCase();
         const explanations = [
           [/^retour$/, "Revenir à la séance associée à cette présentation."],
           [/pr[ée]c[ée]dent/, "Afficher la diapositive précédente."],
           [/suivant/, "Afficher la diapositive suivante."],
-          [/plein [ée]cran/, "Afficher la présentation sur tout l’écran."],
-          [/enregistrer/, "Valider les modifications en cours."],
-          [/annuler|fermer|^x$/, "Fermer cette fenêtre sans continuer."],
+          [/^titre$/, "Renommer le contenu actuellement ouvert."],
+          [/exporter powerpoint/, "Télécharger une présentation PowerPoint avec une diapo plein écran par diapositive."],
+          [/exporter word|imprimer \/ word/, "Ouvrir ou télécharger la version Word. Dans Word, utilisez Enregistrer sous ou Imprimer pour créer aussi un PDF hors connexion."],
+          [/pr[ée]senter|mode tableau/, "Ouvrir le contenu en mode projection. Préparez un PDF avant le cours si le réseau de l’établissement peut bloquer le site."],
+          [/enregistrer/, "Sauvegarder les modifications en cours sur le serveur."],
+          [/r[ée]tablir/, "Remettre la dernière modification qui vient d’être annulée."],
+          [/annuler/, "Revenir sur la dernière modification effectuée."],
+          [/fermer|^x$/, "Fermer cette fenêtre. Une confirmation apparaît si des changements risquent d’être perdus."],
           [/ajouter une classe/, "Créer un nouveau niveau ou groupe de cours."],
           [/ajouter une s[ée]quence/, "Créer une séquence dans cette classe."],
           [/ajouter une s[ée]ance/, "Créer une séance dans cette séquence."],
@@ -5995,28 +6042,33 @@
           [/\+ url/, "Ajouter un média ou un lien depuis une adresse internet."],
           [/exporter zip/, "Télécharger une sauvegarde complète avec les présentations et leurs médias."],
           [/^exporter$/, "Télécharger les données de l’espace au format JSON."],
+          [/imprimer/, "Ouvrir l’aperçu exact des feuilles A4. Vous pourrez imprimer ou exporter, puis créer un PDF à garder hors connexion."],
           [/importer/, "Restaurer un export ZIP ou JSON."],
           [/r[ée]initialiser/, "Repartir du fichier d’exemple initial."],
-          [/mode tableau/, "Ouvrir une présentation en mode projection."],
+          [/\+ roue/, "Ajouter une roue de tirage liée au groupe choisi."],
+          [/\+ chrono/, "Ajouter un chronomètre déplaçable dans la diapo."],
+          [/plein [ée]cran/, "Afficher la présentation sur tout l’écran. Appuyez sur Échap pour quitter le plein écran."],
           [/modifier/, "Modifier cet élément."],
           [/supprimer/, "Supprimer définitivement cet élément après confirmation."],
           [/connexion|se connecter/, "Ouvrir la connexion à un espace professeur enregistré."],
           [/d[ée]connexion/, "Fermer la session professeur actuelle."]
         ];
-        return explanations.find(([pattern]) => pattern.test(normalized))?.[1] || (label ? `Action : ${label}.` : "Utiliser cette commande.");
+        return explanations.find(([pattern]) => pattern.test(normalized))?.[1] || (label ? `Utilisez « ${label} » pour exécuter cette commande. Survolez les autres boutons pour découvrir leur fonctionnement.` : "Utiliser cette commande.");
       }
 
       function hideButtonHelp() {
+        const previousTarget = buttonHelpTarget;
         clearTimeout(buttonHelpTimer);
         buttonHelpTimer = null;
         buttonHelpTarget = null;
         const tooltip = document.querySelector("#buttonHelpTooltip");
         if (tooltip) tooltip.hidden = true;
+        previousTarget?.removeAttribute("aria-describedby");
       }
 
       function scheduleButtonHelp(button) {
         hideButtonHelp();
-        if (!button || button.disabled || button.closest(".sidebar") || button.classList.contains("nav-button")) return;
+        if (!button || button.disabled) return;
         buttonHelpTarget = button;
         buttonHelpTimer = setTimeout(() => {
           if (buttonHelpTarget !== button || !button.isConnected) return;
@@ -6024,12 +6076,13 @@
           if (!tooltip) return;
           tooltip.textContent = buttonHelpText(button);
           tooltip.hidden = false;
+          button.setAttribute("aria-describedby", "buttonHelpTooltip");
           const rect = button.getBoundingClientRect();
           const left = Math.max(12, Math.min(window.innerWidth - tooltip.offsetWidth - 12, rect.left + rect.width / 2 - tooltip.offsetWidth / 2));
           const above = rect.top - tooltip.offsetHeight - 10;
           tooltip.style.left = `${left}px`;
           tooltip.style.top = `${above >= 12 ? above : Math.min(window.innerHeight - tooltip.offsetHeight - 12, rect.bottom + 10)}px`;
-        }, 1500);
+        }, 700);
       }
 
       document.addEventListener("mouseover", (event) => {
@@ -6037,6 +6090,14 @@
         if (button && !button.contains(event.relatedTarget)) scheduleButtonHelp(button);
       });
       document.addEventListener("mouseout", (event) => {
+        const button = event.target.closest("button, label.btn");
+        if (button && !button.contains(event.relatedTarget)) hideButtonHelp();
+      });
+      document.addEventListener("focusin", (event) => {
+        const button = event.target.closest("button, label.btn");
+        if (button) scheduleButtonHelp(button);
+      });
+      document.addEventListener("focusout", (event) => {
         const button = event.target.closest("button, label.btn");
         if (button && !button.contains(event.relatedTarget)) hideButtonHelp();
       });
