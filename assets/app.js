@@ -4750,8 +4750,8 @@
         modal.hidden = false;
         modal.innerHTML = `<section class="print-preview-shell">
           <header class="print-preview-toolbar">
-            <div><strong>Aperçu avant export Word</strong><p class="small muted">Deux diapos par feuille A4 portrait par défaut. Chaque diapo peut passer en page entière paysage.</p></div>
-            <div class="row wrap"><button class="btn primary" onclick="exportLessonWord('${lesson.id}',this)">Exporter Word (.docx)</button><button class="btn" onclick="closeEditor()">Fermer</button></div>
+            <div><strong>Aperçu avant export</strong><p class="small muted">Deux diapos par feuille A4 portrait par défaut. Chaque diapo peut passer en page entière paysage. PowerPoint : une diapo plein écran par diapositive.</p></div>
+            <div class="row wrap"><button class="btn primary" onclick="exportLessonWord('${lesson.id}',this)">Exporter Word (.docx)</button><button class="btn" onclick="exportPreviewPowerPoint('lessonPrintPreview','lesson','${lesson.id}',this)">Exporter PowerPoint (.pptx)</button><button class="btn" onclick="closeEditor()">Fermer</button></div>
           </header>
           <div class="print-preview-scroll">
             <article class="printable-lesson word-multi-preview" id="lessonPrintPreview">
@@ -4771,7 +4771,7 @@
         lessons.forEach((lesson) => (lesson.activities || []).forEach(ensureActivitySlides));
         const modal = document.querySelector("#editorModal");
         modal.hidden = false;
-        modal.innerHTML = `<section class="print-preview-shell"><header class="print-preview-toolbar"><div><strong>Aperçu de la séquence complète</strong><p class="small muted">Plusieurs diapos sont visibles. Retirez ou remettez chacune dans l'export Word.</p></div><div class="row wrap"><button class="btn" onclick="setAllWordSlidesIncluded('sequencePrintPreview')">Tout remettre</button><button class="btn primary" onclick="exportSequenceWord('${sequence.id}',this)">Exporter Word (.docx)</button><button class="btn" onclick="closeEditor()">Fermer</button></div></header><div class="print-preview-scroll"><article class="printable-lesson word-multi-preview" id="sequencePrintPreview">${lessons.map((lesson) => `<section class="print-lesson-activity">${(lesson.activities || []).map((activity) => `<section class="print-lesson-activity">${(activity.slides || []).map((slide,slideIndex) => renderPrintableSlide(activity,slide,slideIndex,true)).join("")}</section>`).join("")}</section>`).join("")}</article></div></section>`;
+        modal.innerHTML = `<section class="print-preview-shell"><header class="print-preview-toolbar"><div><strong>Aperçu de la séquence complète</strong><p class="small muted">Plusieurs diapos sont visibles. Retirez ou remettez chacune dans l’export. PowerPoint : une diapo plein écran par diapositive.</p></div><div class="row wrap"><button class="btn" onclick="setAllWordSlidesIncluded('sequencePrintPreview')">Tout remettre</button><button class="btn primary" onclick="exportSequenceWord('${sequence.id}',this)">Exporter Word (.docx)</button><button class="btn" onclick="exportPreviewPowerPoint('sequencePrintPreview','sequence','${sequence.id}',this)">Exporter PowerPoint (.pptx)</button><button class="btn" onclick="closeEditor()">Fermer</button></div></header><div class="print-preview-scroll"><article class="printable-lesson word-multi-preview" id="sequencePrintPreview">${lessons.map((lesson) => `<section class="print-lesson-activity">${(lesson.activities || []).map((activity) => `<section class="print-lesson-activity">${(activity.slides || []).map((slide,slideIndex) => renderPrintableSlide(activity,slide,slideIndex,true)).join("")}</section>`).join("")}</section>`).join("")}</article></div></section>`;
       }
 
       function openActivityPrintPreview(activityId) {
@@ -4789,7 +4789,7 @@
             </div>
             <div class="row wrap">
               ${printOrientationControl()}<button class="btn primary" onclick="printActivity()">Imprimer</button>
-              <button class="btn" onclick="exportActivityWord('${activity.id}')">Exporter Word (.docx)</button>
+              <button class="btn" onclick="exportActivityWord('${activity.id}')">Exporter Word (.docx)</button><button class="btn" onclick="exportPreviewPowerPoint('activityPrintPreview','activity','${activity.id}',this)">Exporter PowerPoint (.pptx)</button>
               <button class="btn" onclick="closeEditor()">Fermer</button>
             </div>
           </header>
@@ -4941,6 +4941,36 @@
         link.click();
         setTimeout(() => URL.revokeObjectURL(link.href), 0);
         toast("Document Word paysage exporté.");
+      }
+
+      async function exportPreviewPowerPoint(previewId, kind, id, button = null) {
+        const result = kind === "sequence" ? findSequenceContext(id) : kind === "lesson" ? findLessonContext(id) : findActivity(id);
+        if (!result) return;
+        const unlock = beginSaveLock(button);
+        try {
+          const preview = document.getElementById(previewId);
+          if (!preview) throw new Error("ouvrez d’abord l’aperçu");
+          const pages = [...preview.querySelectorAll('.print-slide-page:not([data-word-export="false"])')];
+          if (!pages.length) throw new Error("aucune diapo à exporter");
+          await document.fonts?.ready;
+          const slides = [], slideMedia = [];
+          for (const [index, page] of pages.entries()) {
+            const bytes = await rasterizePreviewPage(page);
+            slides.push({ fullBleed: true, elements: [{ kind: "image", x: 0, y: 0, w: slideSize.width, h: slideSize.height }] });
+            slideMedia.push([{ elementIndex: 0, kind: "image", bytes, fileName: `diapo-${index + 1}.png`, extension: "png", mimeType: "image/png", mediaRelId: "rId2" }]);
+          }
+          const title = result[kind].title || "cours";
+          const content = await makePptx({ title, slides }, slideMedia);
+          const url = URL.createObjectURL(new Blob([content], { type: "application/vnd.openxmlformats-officedocument.presentationml.presentation" }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${slugify(title)}.pptx`;
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          toast("PowerPoint exporté : une diapo plein écran par diapositive.");
+        } catch (error) {
+          toast(`Export PowerPoint impossible : ${error.message || "capture de l’aperçu impossible"}.`);
+        } finally { unlock(); }
       }
 
       async function makePreviewPagesDocx(previewId) {
@@ -5380,9 +5410,9 @@
         ].join("\n");
       }
 
-      async function makePptx(activity) {
+      async function makePptx(activity, renderedMedia = null) {
         const slides = (activity.slides || []).length ? activity.slides : [{ elements: [] }];
-        const slideMedia = await Promise.all(slides.map((slide, slideIndex) => collectSlideMedia(slide, slideIndex)));
+        const slideMedia = renderedMedia || await Promise.all(slides.map((slide, slideIndex) => collectSlideMedia(slide, slideIndex)));
         const media = slideMedia.flat();
         const templateFiles = await loadPptxTemplateFiles();
         const preservedTemplatePaths = /^(ppt\/slideMasters\/|ppt\/slideLayouts\/|ppt\/theme\/|ppt\/presProps\.xml$|ppt\/viewProps\.xml$|ppt\/tableStyles\.xml$)/;
@@ -5508,7 +5538,7 @@
 
       function pptxSlide(activity, slide, index, media) {
         const shapes = [
-          pptxTextShape(`title-${index}`, activity.title || "Presentation", 50, 24, 860, 54, 28, true),
+          slide.fullBleed ? "" : pptxTextShape(`title-${index}`, activity.title || "Presentation", 50, 24, 860, 54, 28, true),
           ...(slide.elements || []).map((element, elementIndex) => {
             const asset = media.find((item) => item.elementIndex === elementIndex);
             return asset ? pptxMediaShape(element, `${index}-${elementIndex}`, asset) : pptxElementShape(element, `${index}-${elementIndex}`);
