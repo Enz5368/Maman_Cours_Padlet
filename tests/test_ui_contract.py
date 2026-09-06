@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import re
-import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -346,13 +345,11 @@ def test_export_pptx_embarque_les_medias_et_produit_un_zip_windows_valide() -> N
     assert "ppt/slideMasters/" in APP_JS
     assert "ppt/slideLayouts/" in APP_JS
     assert "ppt/theme/" in APP_JS
-    assert 'fetch("assets/pptx-template.pptx?v=1")' in APP_JS
-    assert "readStoredZipFiles" in APP_JS
-    with zipfile.ZipFile(ROOT / "assets" / "pptx-template.pptx") as template:
-        assert template.testzip() is None
-        assert "ppt/slideMasters/slideMaster1.xml" in template.namelist()
-        assert "ppt/slideLayouts/slideLayout1.xml" in template.namelist()
-        assert "ppt/theme/theme1.xml" in template.namelist()
+    assert "function pptxBaseFiles()" in APP_JS
+    assert 'fetch("assets/pptx-template.pptx' not in APP_JS
+    assert "pptxSlideMaster()" in APP_JS
+    assert "pptxSlideLayout()" in APP_JS
+    assert "pptxTheme()" in APP_JS
     assert "zipDosDateTime(new Date())" in APP_JS
     assert "appendStoredFilesToExport(files)" in APP_JS
     assert 'path: `medias/${String(index + 1).padStart(3, "0")}-${baseName}${extension}`' in APP_JS
@@ -652,7 +649,7 @@ def test_serveur_accepte_les_formats_opendocument_du_selecteur() -> None:
         assert f'"{extension}": "{mime_type}"' in storage
         assert f'"{mime_type}"' in storage
     assert "extension in OPENDOCUMENT_MIME_BY_EXTENSION" in storage
-    assert "espace-prof-100" in INDEX
+    assert "espace-prof-101" in INDEX
     assert "Précédent" in APP_JS
     assert "Suivant" in APP_JS
     assert "setTimeout(startFreeExampleTutorial, 250);" in APP_JS
@@ -773,7 +770,7 @@ def test_plan_de_classe_style_cinema_et_emploi_du_temps_lycee() -> None:
     assert 'aria-label="Emploi du temps du lundi au vendredi"' in APP_JS
     assert ".timetable-course" in STYLES
     assert "assets/styles.css?v=espace-prof-56" in INDEX
-    assert "assets/app.js?v=espace-prof-100" in INDEX
+    assert "assets/app.js?v=espace-prof-101" in INDEX
     assert "assets/api-client.js?v=espace-prof-6" in INDEX
 
 
