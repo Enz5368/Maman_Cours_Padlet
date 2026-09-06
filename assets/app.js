@@ -5178,6 +5178,10 @@
       async function paintPreviewBytes(context, bytes, x, y, width, height, objectFit = "contain") {
         const bitmap = await createImageBitmap(new Blob([bytes]));
         try {
+          if (objectFit === "fill") {
+            context.drawImage(bitmap, x, y, width, height);
+            return;
+          }
           const contain = objectFit !== "cover";
           const ratio = contain ? Math.min(width / bitmap.width, height / bitmap.height) : Math.max(width / bitmap.width, height / bitmap.height);
           const drawWidth = bitmap.width * ratio, drawHeight = bitmap.height * ratio;

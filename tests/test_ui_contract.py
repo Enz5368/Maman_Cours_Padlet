@@ -561,7 +561,10 @@ def test_apercu_word_permet_demi_page_portrait_ou_page_paysage() -> None:
     assert ".word-preview-sheet.portrait" in STYLES
     assert "aspect-ratio:210 / 297" in STYLES
     assert ".word-preview-sheet.landscape" in STYLES
-    assert ".print-slide-element img { width: 100%; height: 100%; object-fit: contain; }" in STYLES
+    assert ".slide-el img { object-fit: fill; }" in STYLES
+    assert ".print-slide-element img { width: 100%; height: 100%; object-fit: fill; }" in STYLES
+    assert 'if (objectFit === "fill")' in APP_JS
+    assert "context.drawImage(bitmap, x, y, width, height);" in APP_JS
 
 
 def test_url_youtube_se_lit_directement_dans_la_diapositive() -> None:
@@ -628,7 +631,7 @@ def test_export_impression_et_documents_libreoffice() -> None:
     assert 'value="portrait">Portrait' in APP_JS
     assert 'value="landscape">Paysage' in APP_JS
     assert "composePortraitWordSheet" in APP_JS
-    assert "espace-prof-56" in INDEX
+    assert "espace-prof-57" in INDEX
 
 
 def test_diapos_affichent_classe_sequence_et_seance() -> None:
@@ -651,7 +654,7 @@ def test_serveur_accepte_les_formats_opendocument_du_selecteur() -> None:
         assert f'"{extension}": "{mime_type}"' in storage
         assert f'"{mime_type}"' in storage
     assert "extension in OPENDOCUMENT_MIME_BY_EXTENSION" in storage
-    assert "espace-prof-102" in INDEX
+    assert "espace-prof-103" in INDEX
     assert "Précédent" in APP_JS
     assert "Suivant" in APP_JS
     assert "setTimeout(startFreeExampleTutorial, 250);" in APP_JS
@@ -771,8 +774,8 @@ def test_plan_de_classe_style_cinema_et_emploi_du_temps_lycee() -> None:
     assert '["lundi", "mardi", "mercredi", "jeudi", "vendredi"]' in APP_JS
     assert 'aria-label="Emploi du temps du lundi au vendredi"' in APP_JS
     assert ".timetable-course" in STYLES
-    assert "assets/styles.css?v=espace-prof-56" in INDEX
-    assert "assets/app.js?v=espace-prof-102" in INDEX
+    assert "assets/styles.css?v=espace-prof-57" in INDEX
+    assert "assets/app.js?v=espace-prof-103" in INDEX
     assert "assets/api-client.js?v=espace-prof-6" in INDEX
 
 
